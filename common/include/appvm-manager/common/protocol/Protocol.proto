@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+package protocol;
+
+message Message
+{
+	message Result
+	{
+		enum ResultType
+		{
+			Fail = 0;
+			Success = 1;
+		}
+
+		ResultType result = 1;
+		string message = 2;
+	}
+
+	enum VmState
+	{
+		Stopped = 0;
+		Starting = 1;
+		Running = 2;
+		Stopping = 3;
+	}
+
+	message ServerMessage
+	{
+		enum MessageType
+		{
+			GetVmListResponseType = 0;
+			GetVmInfoResponseType = 1;
+			GetVmDependenciesResponseType = 2;
+
+			StartVmResponseType = 3;
+			StopVmResponseType = 4;
+
+			VmNotificationRequestType = 5;
+		}
+
+		message GetVmListResponse
+		{
+			repeated string vm_ids = 1;
+		}
+
+		message GetVmInfoResponse
+		{
+			string vm_id = 1;
+			string name = 2;
+			VmState state = 3;
+		}
+
+		message GetVmDependenciesResponse
+		{
+			string vm_id = 1;
+		}
+
+		message StartVmResponse
+		{
+			string vm_id = 1;
+		}
+
+		message StopVmResponse
+		{
+			string vm_id = 1;
+		}
+
+		message VmNotificationRequest
+		{
+			string vm_id = 1;
+		}
+
+		MessageType type = 1;
+
+		oneof fields
+		{
+			GetVmListResponse get_vm_list_rs = 2;
+			GetVmInfoResponse get_vm_info_rs = 3;
+			GetVmDependenciesResponse get_vm_dependencies_rs = 4;
+			StartVmResponse start_vm_rs = 5;
+			StopVmResponse stop_vm_rs = 6;
+			VmNotificationRequest vm_notification_rq = 7;
+		}
+	}
+
+	message ClientMessage
+	{
+		enum MessageType
+		{
+			GetVmListRequestType = 0;
+			GetVmInfoRequestType = 1;
+			GetVmDependenciesRequestType = 2;
+
+			StartVmRequestType = 3;
+			StopVmRequestType = 4;
+
+			VmNotificationResponseType = 5;
+		}
+
+		message GetVmListRequest
+		{
+		}
+
+		message GetVmInfoRequest
+		{
+			string vm_id = 1;
+		}
+
+		message GetVmDependenciesRequest
+		{
+			string vm_id = 1;
+		}
+
+		message StartVmRequest
+		{
+			string vm_id = 1;
+		}
+
+		message StopVmRequest
+		{
+			string vm_id = 1;
+		}
+
+		message VmNotificationResponse
+		{
+			string vm_id = 1;
+		}
+
+		MessageType type = 1;
+
+		oneof fields
+		{
+			GetVmListRequest get_vm_list_rq = 2;
+			GetVmInfoRequest get_vm_info_rq = 3;
+			GetVmDependenciesRequest get_vm_dependencies_rq = 4;
+			StartVmRequest start_vm_rq = 5;
+			StopVmRequest stop_vm_rq = 6;
+			VmNotificationResponse vm_notification_rs = 7;
+		}
+	}
+
+	Result result = 1;
+
+	oneof fields
+	{
+		ServerMessage server_message = 2;
+		ClientMessage client_message = 3;
+	}
+}
